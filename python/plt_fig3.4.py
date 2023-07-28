@@ -95,10 +95,6 @@ zr = grd.vgrid.z_r[:][:, eta1, xi1]
 zv = grd.vgrid.z_w[:][:, eta1, xi1]
 h = grd.vgrid.h[eta1:eta2, xi1:xi2]
 
-zi = np.argmin(np.abs(zr+abs(z0)))
-xi00 = np.argmin(np.abs(xr-x0))
-xi01 = np.argmin(np.abs(xr-x1))
-
 fh = nc.Dataset(init_file)
 temp0 = fh.variables['temp'][:, :, eta1:eta2, xi1:xi2].mean(axis=0)
 rho0 = fh.variables['rho'][:, :, eta1:eta2, xi1:xi2].mean(axis=0)
@@ -140,7 +136,24 @@ vr2 = 0.5*(vv2[:, 1:, :] + vv2[:, :-1, :])
 vu2 = 0.25*(vve2[:, 1:, 1:]+vve2[:, 1:, :-1] +
             vve2[:, :-1, :1]+vve2[:, :-1, :-1])
 
+np.savez('fig3.4data.npz',
+        xr=xr, xv=xv, yr=yr, yv=yv, zr=zr, zv=zv, ur=ur, vr=vr,
+        ur2=ur2, vr2=vr2, xvel=xvel, yvel=yvel,
+        xn=xn, zn=zn, un=un, vn=vn, uu=uu, vu=vu, uu2=uu2, vu2=vu2)
+
 # ----------------------------------------------------------------------
+
+data = np.load('fig3.3data.npz')
+xr, xv, yr, yv = data['xr'], data['xv'], data['yr'], data['yv']
+zr, zv = data['zr'], data['zv']
+ur, vr, ur2, vr2 = data['ur'], data['vr'], data['ur2'], data['vr2']
+xvel, yvel = data['xvel'], data['yvel']
+xn, zn, un, vn = data['xn'], data['zn'], data['un'], data['un']
+uu, vu, uu2, vu2 = data['uu'], data['vu'], data['uu2'], data['vu2']
+
+zi = np.argmin(np.abs(zr+abs(z0)))
+xi00 = np.argmin(np.abs(xr-x0))
+xi01 = np.argmin(np.abs(xr-x1))
 
 fig = plt.figure()
 fig.set_size_inches(8, 7)
